@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Usmena i praktična provjera – Informatika VII. razred</title>
+<style>
+:root{--bg:#f2f6fb;--paper:#fff;--ink:#172334;--muted:#5c697b;--navy:#183c61;--blue:#23699b;--line:#d9e4f0;--soft:#edf4fb;--green:#166a40;--shadow:0 4px 20px rgba(16,40,70,.07)}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:var(--bg);font-family:Arial,"Segoe UI",sans-serif;font-size:16px}
+.wrap{max-width:1230px;margin:auto;padding:20px}
+header{background:linear-gradient(115deg,#173c63,#2872a3);padding:24px 27px;border-radius:18px;color:white;box-shadow:var(--shadow)}
+header h1{font-size:clamp(25px,3.8vw,38px);margin:0 0 8px}
+header p{line-height:1.5;margin:0;color:#e9f5ff}
+.topline,.formrow,.actions,.toolbar,.result,.eval,.qactions,.scores,.notes{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.topline{justify-content:space-between;margin-top:14px}
+.pill{background:#ffffff25;border:1px solid #ffffff50;border-radius:99px;padding:5px 11px;font-size:13px}
+.panel{background:white;border:1px solid var(--line);padding:16px 18px;border-radius:15px;margin-top:15px;box-shadow:var(--shadow)}
+.formrow{align-items:flex-end}
+.formrow label{flex:1 1 180px}
+label{font-weight:700}
+label span.small{display:block;color:var(--muted);font-size:12px;font-weight:normal;margin-top:4px}
+select,input,textarea,button{font:inherit}
+select,input[type=text],textarea{padding:10px 12px;border:1px solid #becddd;border-radius:9px;background:white;color:var(--ink);max-width:100%}
+select,input[type=text]{width:100%;margin-top:6px}
+button{border:0;border-radius:9px;padding:10px 13px;cursor:pointer;font-weight:700}
+button:hover{filter:brightness(.96)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #e5b64b;outline-offset:2px}
+.primary{background:#174e7a;color:white}
+.alt{background:#e4f0fa;color:#16436a}
+.quiet{background:#f0f3f7;color:#31465d}
+.smallbtn{font-size:13px;padding:7px 10px}
+.actions{margin-top:13px}
+summary{cursor:pointer;font-weight:800}
+details>div{padding-top:13px}
+.topicgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 15px}
+.topiccheck{display:flex;align-items:flex-start;gap:8px;border:1px solid #e3eaf2;padding:10px;border-radius:9px;font-size:14px;line-height:1.4;cursor:pointer}
+.topiccheck input{margin:3px 0 0;width:17px;height:17px;flex-shrink:0}
+.topiccheck:has(input:checked){background:#f1f7ff;border-color:#c2dbea}
+.sidenote{font-size:13px;line-height:1.45;color:var(--muted)}
+.notice{display:none;margin-top:12px;background:#fff8e8;border-left:4px solid #dfa347;padding:10px;border-radius:7px;font-size:13px}
+.notice.visible{display:block}
+.toolbar{justify-content:space-between;margin-top:17px}
+.toolbar h2{font-size:21px;margin:0}
+.count{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:12px}
+.card{border:1px solid #dbe6f1;border-radius:15px;background:white;box-shadow:var(--shadow);padding:17px 18px;display:flex;flex-direction:column;min-height:245px;break-inside:avoid}
+.meta{display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+.badge{padding:5px 9px;font-size:12px;font-weight:800;border-radius:99px}
+.theory{background:#e2effb;color:#164d79}
+.practice{background:#dcf6e7;color:#116342}
+.lesson{color:#526478;font-size:13px;font-weight:700}
+.card h3{font-size:clamp(19px,2.1vw,24px);line-height:1.32;margin:2px 0 13px}
+.answer{display:none;border-left:4px solid #25699a;background:#f3f7fb;color:#21344a;border-radius:8px;padding:11px 12px;margin:0 0 12px;font-size:15px;line-height:1.5}
+.answer.shown{display:block}
+.answer strong{color:#0d4d80}
+.bottom{margin-top:auto}
+.qactions{gap:6px}
+.scores{margin-left:auto;gap:4px}
+.scaption{font-weight:700;color:#566476;font-size:12px}
+.score{padding:8px 10px;min-width:34px;background:#eef2f7;color:#29415c;border:1px solid #d5dfeb}
+.score.active{background:#174e7a;color:white;border-color:#174e7a}
+.result{justify-content:space-between}
+.big{font-size:27px;font-weight:900;color:#173e63}
+.result small{color:var(--muted);font-size:13px}
+.grade{font-size:30px;font-weight:900;color:#193f60}
+.grade.good{color:#177045}
+.grade.bad{color:#ac393c}
+.notes{align-items:flex-start}
+.notes label{width:100%}
+.notes textarea{width:100%;min-height:66px;resize:vertical;margin-top:6px}
+.criteria{font-size:13px;color:#516275;line-height:1.65;margin-top:10px}
+.criteria strong{color:#25384c}
+.maxline{font-size:13px;color:#687689;margin-top:7px}
+.footer{font-size:12px;color:#64748b;margin-top:16px;line-height:1.6}
+@media(max-width:800px){.topicgrid,.grid{grid-template-columns:1fr}.wrap{padding:10px}.panel{padding:14px}header{padding:20px}.card{min-height:auto}.scores{margin-left:0}}
+@page{size:A4;margin:10mm}
+@media print{
+html,body{background:white!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:none;width:100%;padding:0}
+header{border-radius:0;box-shadow:none;padding:8px 10px;background:white;color:#111;border-bottom:2px solid #222}
+header p,.topline{color:#333}
+.pill{background:white;border:1px solid #bbb;color:#111}
+.panel{box-shadow:none;border:1px solid #bbb;padding:10px;margin-top:8px;break-inside:avoid}
+.no-print,.actions,.qactions,details,.notice,.footer{display:none!important}
+.grid{grid-template-columns:1fr 1fr;gap:8px}
+.card{box-shadow:none;min-height:135px;padding:10px}
+.card h3{font-size:13pt}
+.answer{display:none!important}
+html.print-answers .answer{display:block!important}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header>
+<h1>Usmena i praktična provjera – Informatika VII. razred</h1>
+<p>Kompletna baza pitanja iz listića za samoprocjenu • Zasebno bodovanje • Ispis i interaktivni rad</p>
+<div class="topline">
+<span class="pill">Samostalna HTML aplikacija · radi bez interneta</span>
+<span class="pill" id="bankTop"></span>
+</div>
+</header>
+
+<section class="panel">
+<div class="formrow">
+<label>Model provjere
+<select id="mode">
+<option value="2T2P" selected>2 teorijska + 2 praktična</option>
+<option value="1T3P">1 teorijsko + 3 praktična</option>
+</select>
+</label>
+<label>Učenik/učenica
+<input id="student" type="text" placeholder="Ime i prezime" autocomplete="off">
+</label>
+<label>Odjeljenje
+<select id="division">
+<option>VII.1</option><option>VII.2</option><option>VII.a</option><option>VII.b</option>
+</select>
+</label>
+</div>
+<div class="actions no-print">
+<button class="primary" id="draw">🎲 Izvuci nova pitanja</button>
+<button class="alt" id="newStudent">Sljedeći učenik</button>
+<button class="alt" id="toggleAnswers">Prikaži sve odgovore</button>
+<button class="quiet" id="reset">Poništi bodove</button>
+<button class="quiet" id="printQ">Ispiši pitanja</button>
+<button class="quiet" id="printA">Ispiši s odgovorima</button>
+</div>
+<div id="notice" class="notice" role="status"></div>
+</section>
+
+<section class="panel no-print">
+<details open>
+<summary>⚙️ Izbor lekcija <span id="lessonCount" class="sidenote"></span></summary>
+<div>
+<p class="sidenote">Lekcija 2.3 je prema dogovoru isključena, ali je možete uključiti kvačicom ispod.</p>
+<div id="topicGrid" class="topicgrid"></div>
+<div class="actions">
+<button id="onlyCovered" class="alt smallbtn">Samo obrađene (bez 2.3)</button>
+<button id="allLessons" class="quiet smallbtn">Uključi sve (sa 2.3)</button>
+<button id="noLessons" class="quiet smallbtn">Isključi sve</button>
+</div>
+</div>
+</details>
+</section>
+
+<div class="toolbar">
+<h2 id="questionHeading">Izvučena pitanja</h2>
+<span id="questionCount" class="count"></span>
+</div>
+<div id="grid" class="grid"></div>
+
+<section class="panel result" aria-live="polite">
+<div>
+<div style="font-weight:700">Ukupno bodova</div>
+<div id="total" class="big">0/12</div>
+<small id="evaluated">Nije ocijenjeno nijedno pitanje.</small>
+</div>
+<div class="eval">
+<span id="grade" class="grade">Ocjena: –</span>
+<div id="gradeDesc" style="font-size:13px;color:#5e6c7c;max-width:260px">Najprije boduj sva izvučena pitanja.</div>
+</div>
+</section>
+
+<section class="panel notes">
+<label>Napomena nastavnika (ne sprema se izvan ove stranice)
+<textarea id="teacherNotes" placeholder="Npr. učenik samostalno otvara mrežnu lokaciju i brzo filtrira datoteke…"></textarea>
+</label>
+<div class="criteria">
+<strong>Bodovanje po pitanju:</strong>
+3 = točno i samostalno · 2 = uglavnom točno / manja pomoć · 1 = djelomično / veća pomoć · 0 = ne zna / ne može izvesti.
+<br><strong>Prijedlog ocjene:</strong>
+11–12 bodova = 5 · 9–10 = 4 · 7–8 = 3 · 5–6 = 2 · 0–4 = 1.
+</div>
+<div id="thresholds" class="maxline"></div>
+</section>
+<p class="footer">Sva pitanja usklađena s listićima za samoprocjenu znanja za 7. razred.</p>
+</main>
+
+<script>
+'use strict';
+
+const LESSONS = [
+{
+code:"21", title:"2.1. Povezivanje računala i ostalih uređaja u računalne mreže",
+theory:[
+["Što je računalna mreža?","Skup povezanih računala koja mogu međusobno komunicirati radi razmjene podataka putem nekog medija za prijenos podataka."],
+["Koja je strojna i programska oprema koja čini računalnu mrežu?","Strojnu opremu čine računala, mediji za prijenos (žični/bežični) i mrežni uređaji (mrežna kartica, preklapnik, usmjernik), a programsku opremu čine mrežni protokoli i operativni sustav."],
+["Navedite osnovne prednosti i moguće nedostatke umrežavanja računala.","Prednosti: razmjena podataka, zajedničko korištenje uređaja, manji rizik od gubitka. Nedostaci: smanjena sigurnost, zlonamjerni programi, otežano održavanje."],
+["Kako dijelimo mreže prema broju i veličini lokacije?","Na osobne (PAN), lokalne (LAN), gradske (MAN) i široko rasprostranjene (WAN) mreže."],
+["Koja je vrsta mreže u vašoj učionici?","Lokalna računalna mreža (LAN / WLAN)."],
+["Koja je najpoznatija WAN mreža?","Internet."],
+["Kako dijelimo mreže prema ulozi računala u mreži?","Na mreže s neravnopravnim odnosom (korisnik-poslužitelj / client-server) i ravnopravnim odnosom (čvor-čvor / peer-to-peer)."],
+["Koje su sve prednosti spajanja računala u radnu grupu?","Mogućnost korištenja zajedničkih uređaja (pisača), dijeljenje mapa i datoteka te pristup internetu."],
+["Možemo li višemedijske sadržaje s tableta ili pametnog telefona prikazivati na pametnom TV, ukoliko su svi uređaji spojeni u lokalnu mrežu?","Možemo, zahvaljujući bežičnom spajanju u lokalnu mrežu i mogućnostima reprodukcije višemedijskih sadržaja."]
+],
+practice:[
+["Preko Datotečnog eksplorera (File Explorer) pristupi dijeljenoj lokaciji / računalu 'NASTAVNIK' u lokalnoj mreži.","Otvara Datotečni eksplorer, u navigacijskom oknu odabire Mreža (Network) ili u traku adrese upisuje \\NASTAVNIK te otvara dijeljenu mapu."],
+["Provjeri i pročitaj na računalu u učionici je li mrežni profil postavljen na 'Javno' ili 'Privatno'.","Otvara Postavke -> Mreža i internet -> Ethernet/Wi-Fi te očitava mrežni profil."],
+["Provjeri na svom računalu ikonu mrežne veze na obavijesnoj traci i reci je li veza ostvarena žično ili bežično.","Očitava ikonu na programskoj traci i točno navodi radi li se o žičnoj (Ethernet) ili bežičnoj (Wi-Fi) vezi."]
+]
+},
+{
+code:"22", title:"2.2. Prijenos podataka mrežom",
+theory:[
+["Opišite paketni prijenos podataka.","Datoteka koja se prenosi mrežom dijeli se u male dijelove (pakete) koji putuju mrežom do odredišta gdje se ponovno spajaju u izvornu datoteku."],
+["Nabroji i objasni dijelove svakog paketa.","Zaglavlje (podatci o primatelju i pošiljatelju), tijelo s podatcima i začelje (dio namijenjen provjeri ispravnosti isporuke)."],
+["Koji uređaj upravlja paketnim prijenosom podataka?","Usmjernik (router) za mreže između LAN-a i WAN-a, odnosno mrežni preklopnik (switch) u lokalnoj mreži."],
+["Što su privatne IP adrese?","Adrese koje se koriste u lokalnim mrežama, nisu jedinstvene i mogu se ponavljati u različitim mrežama."],
+["Što su javne IP adrese?","Jedinstvene adrese na internetu koje se koriste za identifikaciju usmjernika ili mrežnih sjedišta."],
+["Što su statičke, a što dinamičke IP adrese?","Statičke su nepromjenjive (za poslužitelje), a dinamičke se mijenjaju i dodjeljuje ih davatelj internetskih usluga (ISP)."],
+["Kako možete saznati IP adresu računala na kojem radiš?","Pokretanjem Naredbenog retka (cmd) s naredbom ipconfig ili pregledom Svojstava mrežne veze u sustavu Windows."]
+],
+practice:[
+["Pokreni Naredbeni redak (cmd) i upotrijebi naredbu ipconfig za pronalaženje IPv4 adrese svog računala.","Pritišće Win+R, upisuje cmd, unosi ipconfig te očitava prikazanu IPv4 adresu."],
+["U Naredbenom retku (cmd) provjeri mrežnu povezanost s web sjedištem škole ili CARNet-a pomoću naredbe ping.","Upisuje naredbu ping www.skole.hr (ili zadanu adresu) i očitava odaziv mreže."],
+["Pronađi IP adresu svog računala kroz grafičko sučelje Windowsa (bez korištenja Naredbenog retka).","Otvara Postavke -> Mreža i internet -> Ethernet/Wi-Fi -> Svojstva i pronalazi IPv4 adresu."]
+]
+},
+{
+code:"23", title:"2.3. Zaštita računala i podataka, sigurnost na mreži",
+theory:[
+["Što je računalna sigurnost?","Skup mjera i postupaka kojima se osiguravaju podatci pohranjeni u računalima od gubitka, oštećenja i neovlaštenog pristupa."],
+["Koje opasnosti prijete računalu na mreži?","Maliciozni programi (virusi, crvi, trojanci, špijunski i reklamni alati), krađa podataka, prijevare i zlonamjerni kodovi."],
+["Kako se šire računalni virusi?","Tako što u druge programe unose kopiju samog sebe te se šire računalnim sustavom ili mrežom."],
+["Koje su razlike između računalnog crva i trojanskog konja?","Crv se umnožava kroz mreže bez širenja na druge programe i otežava rad mreže, dok se trojanski konj lažno predstavlja kao koristan program radi krađe podataka."],
+["Što su reklamni i špijunski alati?","Reklamni alati prikazuju neželjene oglase (adware), dok špijunski alati neovlašteno prikupljaju i šalju privatne podatke (spyware)."],
+["Čemu služe antivirusni programi i vatrozid?","Antivirusni programi štite, prepoznaju i uklanjaju maliciozne programe, dok vatrozid (firewall) nadzire i filtrira mrežni promet."]
+],
+practice:[
+["Opiši i pokaži postupak brze provjere računala pomoću Windows Defendera (Sigurnost Windowsa).","Otvara Sigurnost Windowsa -> Zaštita od virusa i prijetnji -> pokreće brzi pregled."],
+["Pronađite na računalu gdje se može dodati novi korisnički račun (bez završne izrade).","Otvara Postavke -> Računi -> Obitelj i druge osobe -> Dodaj nekog drugog na ovaj PC."]
+]
+},
+{
+code:"24", title:"2.4. Online pohrana",
+theory:[
+["Što je online pohrana podataka i koje su joj prednosti?","Spremanje datoteka u Oblak (Cloud) putem interneta. Prednosti su stalna dostupnost s bilo kojeg uređaja, svi podatci na jednom mjestu i sigurnost."],
+["Predložite neke od servisa za online pohranu podataka.","OneDrive, Google Disk i Dropbox."],
+["Opišite postupak dijeljenja datoteke s drugim korisnicima na OneDrivu.","Odabirom naredbe Podijeli (Share), unosom e-adrese ili izradom poveznice uz odabir odgovarajućih dopuštenja."]
+],
+practice:[
+["Prijavi se na svoj školski OneDrive račun i prenesu jednu probnu datoteku u oblak.","Pristupa servisu OneDrive, klikne Prenesi (Upload) -> Datoteke i odabire zadanu datoteku."],
+["Stvori novu mapu u svojem OneDriveu te u nju premjesti prenesenu datoteku.","Klikne Novo -> Mapa, imenuje je te opcijom Premjesti u (Move to) prebacuje datoteku u mapu."],
+["Demonstriraj kako bi zadanu datoteku na OneDriveu podijelio/la s kolegom iz klupe samo za čitanje (pregledavanje).","Klikne na gumb Podijeli (Share), odabire opciju 'Može samo pregledati' (Can view) i generira poveznicu."]
+]
+},
+{
+code:"25", title:"2.5. Vrste datoteka, organizacija podataka na računalu i u oblaku",
+theory:[
+["Definirajte pojam datoteke.","Datoteka je digitalni zapis podataka pohranjen na spremniku računala, pametnog telefona ili sličnog uređaja."],
+["Kakva je to programska datoteka?","Datoteka koja sadržava instrukcije koje procesor razumije i izvršava (uključujući izvršne .exe datoteke i sistemske datoteke aplikacija)."],
+["Kakva je to znakovna datoteka?","Datoteka koja sadržava samo tekst bez informacija o njegovu oblikovanju (.txt)."],
+["Kakva je to datoteka dokumenata?","Datoteka koju stvaramo u primjenskom programu, npr. tekstni dokument (.docx), prezentacija (.pptx) ili tablica (.xlsx)."],
+["Što je datotečni nastavak i kako uključiti njegov prikaz?","Datotečni nastavak identificira oblik datoteke. U Eksploreru se uključuje preko kartice Prikaz -> Pokaži/sakrij -> Datotečni nastavci."],
+["Što je mapa, podmapa i stablo mapa?","Mapa je prostor za spremanje datoteka. Podmapa je mapa unutar druge mape, a stablo mapa prikazuje hijerarhijsku organizaciju prema nadređenosti."],
+["Objašnjenje pojam sažimanja (komprimiranja) mapa i datoteka.","Postupak smanjivanja veličine podataka radi bržeg i lakšeg prijenosa putem mreže ili uštede prostora (npr. .zip)."]
+],
+practice:[
+["U mapi 'NERED' filtriraj (ili pretraži) samo datoteke koje imaju datotečni nastavak .docx.","Otvara mapu NERED, u tražilicu upisuje *.docx ili filtrira po vrsti dokumenta."],
+["Iz mape 'NERED' izreži (ili kopiraj) sve slikovne datoteke (.jpg, .png) i prebaci ih u mapu 'Slike'.","Označi sve slikovne datoteke u mapi NERED, odabire Izreži/Kopiraj te ih zalijepi u mapu Slike."],
+["U mapi 'NERED' razvrstaj (sortiraj) sve datoteke prema njihovoj veličini (od najveće prema najmanjoj).","Klikne na zaglavlje Veličina (Size) ili u izborniku Razvrstaj po odabire Veličina."],
+["Sažmi (komprimiraj) mapu 'Dokumenti' u ZIP arhivu na radnoj površini.","Desni klik na mapu -> Pošalji u -> Komprimirana (zip) mapa."],
+["Prikaži potpunu putanju (stazu) do jedne datoteke unutar podmape i pročitaj je.","Očitava traku adrese ili iz svojstava datoteke čita potpunu stazu (npr. C:\\Nered\\Dokumenti\\Sastavak.docx)."]
+]
+}
+];
+
+const GRADE_LIMITS = [
+{min:11,grade:5,label:"Odličan – vrlo sigurno znanje i samostalna izvedba."},
+{min:9,grade:4,label:"Vrlo dobar – dobro razumijevanje, uz manje nesigurnosti."},
+{min:7,grade:3,label:"Dobar – usvojene glavne osnove gradiva."},
+{min:5,grade:2,label:"Dovoljan – djelomično usvojene osnovne činjenice i postupci."},
+{min:0,grade:1,label:"Nedovoljan – potrebno je dodatno usvojiti osnovne sadržaje."}
+];
+
+const grid=document.getElementById("grid");
+const topicGrid=document.getElementById("topicGrid");
+let enabled={};
+let questions=[];
+let marks=[];
+let showAll=false;
+
+function esc(s){
+ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function randomInt(n){return Math.floor(Math.random()*n);}
+function shuffle(a){
+ const b=a.slice();
+ for(let i=b.length-1;i>0;i--){const j=randomInt(i+1);[b[i],b[j]]=[b[j],b[i]];}
+ return b;
+}
+function getPools(type){
+ const lessons=LESSONS.filter(l=>enabled[l.code]);
+ return lessons.flatMap(l=>l[type].map((q,i)=>({
+ id:l.code+"_"+type+"_"+i,
+ lesson:l.title,
+ code:l.code,
+ type,
+ q:q[0],
+ a:q[1]
+ })));
+}
+function drawUnique(pool,count){
+ if(pool.length<count)throw new Error("Nema dovoljno pitanja za odabrani model. Uključi još lekcija.");
+ return shuffle(pool).slice(0,count);
+}
+function renderTopics(){
+ topicGrid.innerHTML="";
+ LESSONS.forEach(l=>{
+  const label=document.createElement("label");
+  label.className="topiccheck";
+  const cb=document.createElement("input");
+  cb.type="checkbox";cb.checked=!!enabled[l.code];
+  cb.addEventListener("change",()=>{
+   enabled[l.code]=cb.checked;
+   updateLessons();
+   notify("Odabir lekcija je promijenjen. Izvuci nova pitanja za primjenu promjene.");
+  });
+  const span=document.createElement("span");
+  span.textContent=l.title+" ("+l.theory.length+" teorijskih, "+l.practice.length+" praktičnih pitanja)";
+  label.append(cb,span);topicGrid.append(label);
+ });
+ updateLessons();
+}
+function updateLessons(){
+ [...topicGrid.querySelectorAll("input")].forEach((cb,i)=>cb.checked=!!enabled[LESSONS[i].code]);
+ const count=LESSONS.filter(l=>enabled[l.code]).length;
+ document.getElementById("lessonCount").textContent=count+" od "+LESSONS.length+" uključenih lekcija";
+ document.getElementById("bankTop").textContent="Baza: "+LESSONS.filter(l=>enabled[l.code]).reduce((s,l)=>s+l.theory.length,0)+" teorijskih + "+LESSONS.filter(l=>enabled[l.code]).reduce((s,l)=>s+l.practice.length,0)+" praktičnih";
+}
+function notify(message){
+ const el=document.getElementById("notice");
+ el.textContent=message;el.classList.add("visible");
+}
+function clearNotice(){document.getElementById("notice").classList.remove("visible");}
+function drawQuestions(){
+ clearNotice();
+ const mode=document.getElementById("mode").value;
+ const theoryCount=mode==="2T2P"?2:1;
+ const practiceCount=mode==="2T2P"?2:3;
+ try{
+  const theory=drawUnique(getPools("theory"),theoryCount);
+  const practice=drawUnique(getPools("practice"),practiceCount);
+  questions=shuffle(theory.concat(practice));
+  marks=questions.map(()=>null);
+  showAll=false;
+  document.getElementById("toggleAnswers").textContent="Prikaži sve odgovore";
+  renderQuestions();
+  updateResults();
+ }catch(e){notify(e.message);}
+}
+function renderQuestions(){
+ grid.innerHTML="";
+ questions.forEach((q,i)=>{
+  const card=document.createElement("article");
+  card.className="card";
+  const kind=q.type==="theory"?"Teorijsko pitanje (Udžbenik)":"Praktični zadatak (Na računalu)";
+  card.innerHTML=`
+   <div class="meta">
+    <span class="badge ${q.type==="theory"?"theory":"practice"}">${kind}</span>
+    <span class="lesson">${esc(q.lesson)}</span>
+   </div>
+   <h3>${i+1}. ${esc(q.q)}</h3>
+   <div class="answer" id="answer-${i}"><strong>Očekivani odgovor / kriterij:</strong><br>${esc(q.a)}</div>
+   <div class="bottom">
+    <div class="qactions">
+     <button class="alt smallbtn" data-answer="${i}">Prikaži odgovor</button>
+     <div class="scores">
+      <span class="scaption">Bodovi:</span>
+      ${[0,1,2,3].map(n=>`<button class="score ${marks[i]===n?"active":""}" data-q="${i}" data-score="${n}" aria-label="Dodijeli ${n} bodova">${n}</button>`).join("")}
+     </div>
+    </div>
+   </div>`;
+  grid.append(card);
+ });
+ grid.querySelectorAll("[data-answer]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+   const answer=document.getElementById("answer-"+btn.dataset.answer);
+   answer.classList.toggle("shown");
+   btn.textContent=answer.classList.contains("shown")?"Sakrij odgovor":"Prikaži odgovor";
+  });
+ });
+ grid.querySelectorAll("[data-q]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+   const i=Number(btn.dataset.q);
+   marks[i]=Number(btn.dataset.score);
+   grid.querySelectorAll(`[data-q="${i}"]`).forEach(b=>b.classList.toggle("active",Number(b.dataset.score)===marks[i]));
+   updateResults();
+  });
+ });
+ document.getElementById("questionCount").textContent=questions.length+" pitanja";
+ document.getElementById("questionHeading").textContent="Izvučena pitanja – "+(document.getElementById("student").value.trim()||"učenik/učenica");
+}
+function updateResults(){
+ const total=marks.reduce((s,m)=>s+(m===null?0:m),0);
+ const max=questions.length*3;
+ const evaluated=marks.filter(m=>m!==null).length;
+ document.getElementById("total").textContent=total+"/"+max;
+ document.getElementById("evaluated").textContent=evaluated+" od "+questions.length+" pitanja ocijenjeno.";
+ const gradeEl=document.getElementById("grade");
+ const desc=document.getElementById("gradeDesc");
+ gradeEl.className="grade";
+ if(!questions.length||evaluated!==questions.length){
+  gradeEl.textContent="Ocjena: –";
+  desc.textContent="Najprije boduj sva izvučena pitanja.";
+  return;
+ }
+ let grade;
+ if(max===12){
+  grade=GRADE_LIMITS.find(x=>total>=x.min).grade;
+ }else{
+  const percent=total/max;
+  grade=percent>=0.90?5:percent>=0.75?4:percent>=0.60?3:percent>=0.40?2:1;
+ }
+ const info=GRADE_LIMITS.find(x=>x.grade===grade);
+ gradeEl.textContent="Ocjena: "+grade;
+ gradeEl.classList.add(grade>=4?"good":grade===1?"bad":"");
+ desc.textContent=info.label;
+ document.getElementById("thresholds").textContent="Ukupan mogući broj bodova: "+max+". Prijedlog ocjene temelji se na bodovima; praktičnu samostalnost i brzinu izvedbe nastavnik procjenjuje zasebno.";
+}
+function toggleAllAnswers(){
+ showAll=!showAll;
+ document.querySelectorAll(".answer").forEach(el=>el.classList.toggle("shown",showAll));
+ document.querySelectorAll("[data-answer]").forEach(btn=>btn.textContent=showAll?"Sakrij odgovor":"Prikaži odgovor");
+ document.getElementById("toggleAnswers").textContent=showAll?"Sakrij sve odgovore":"Prikaži sve odgovore";
+}
+function resetScores(){
+ marks=questions.map(()=>null);
+ renderQuestions();
+ updateResults();
+ clearNotice();
+}
+function nextStudent(){
+ document.getElementById("student").value="";
+ document.getElementById("teacherNotes").value="";
+ drawQuestions();
+ document.getElementById("student").focus();
+}
+document.getElementById("draw").addEventListener("click",drawQuestions);
+document.getElementById("newStudent").addEventListener("click",nextStudent);
+document.getElementById("toggleAnswers").addEventListener("click",toggleAllAnswers);
+document.getElementById("reset").addEventListener("click",resetScores);
+document.getElementById("mode").addEventListener("change",drawQuestions);
+document.getElementById("student").addEventListener("input",()=>{
+ document.getElementById("questionHeading").textContent="Izvučena pitanja – "+(document.getElementById("student").value.trim()||"učenik/učenica");
+});
+document.getElementById("onlyCovered").addEventListener("click",()=>{
+ LESSONS.forEach(l=>enabled[l.code]=(l.code!=="23"));
+ updateLessons();drawQuestions();
+});
+document.getElementById("allLessons").addEventListener("click",()=>{
+ LESSONS.forEach(l=>enabled[l.code]=true);
+ updateLessons();drawQuestions();
+});
+document.getElementById("noLessons").addEventListener("click",()=>{
+ LESSONS.forEach(l=>enabled[l.code]=false);
+ updateLessons();grid.innerHTML="";questions=[];marks=[];updateResults();
+});
+document.getElementById("printQ").addEventListener("click",()=>{
+ document.documentElement.classList.remove("print-answers");window.print();
+});
+document.getElementById("printA").addEventListener("click",()=>{
+ document.querySelectorAll(".answer").forEach(el=>el.classList.add("shown"));
+ document.documentElement.classList.add("print-answers");window.print();
+ setTimeout(()=>document.documentElement.classList.remove("print-answers"),500);
+});
+
+// Inicijalno uključene obrađene lekcije (2.1, 2.2, 2.4, 2.5), a 2.3 ostavljena isključena
+LESSONS.forEach(l=>enabled[l.code]=(l.code!=="23"));
+renderTopics();
+drawQuestions();
+</script>
+</body>
+</html>
