@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>VII. razred – Digitalni trag | Bilješke za bilježnicu</title>
+  <style>
+    :root { --navy:#102b49; --blue:#145d9b; --soft:#eef5fb; --text:#19334b; --paper:#fff; --gold:#e7a232; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#eaf0f6; color:var(--text); font-family:Arial,Helvetica,sans-serif; }
+    .toolbar { max-width:1200px; margin:12px auto 0; padding:0 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:15px; }
+    .toolbar p { margin:0; font-weight:bold; color:#31536d; }
+    .controls { display:flex; flex-wrap:wrap; gap:8px; }
+    button { border:1px solid #a9b9c9; background:white; color:#183b5f; padding:10px 16px; border-radius:10px; cursor:pointer; font-size:16px; font-weight:700; }
+    button:hover { background:#e6f0fa; }
+    button:focus-visible { outline:3px solid #d39d36; outline-offset:3px; }
+    button:disabled { opacity:.42; cursor:default; }
+    button.primary { background:var(--navy); color:white; border-color:var(--navy); }
+    main { max-width:1200px; margin:12px auto; padding:0 16px 16px; }
+    .slide { display:none; background:var(--paper); border-radius:19px; min-height:calc(100vh - 100px); padding:35px 50px 28px; box-shadow:0 12px 30px #193a5c1d; border:1px solid #dbe5ee; }
+    .slide.active { display:block; }
+    .eyebrow { display:inline-block; font-size:17px; font-weight:800; color:var(--blue); letter-spacing:.04em; margin:0 0 8px; }
+    h1 { font-size:clamp(34px,3.7vw,49px); margin:0 0 27px; line-height:1.12; color:var(--navy); border-bottom:5px solid #84b9d9; padding-bottom:15px; }
+    .item { margin:0 0 22px; padding-left:21px; border-left:6px solid var(--gold); }
+    h2 { color:var(--blue); font-size:clamp(26px,2.45vw,34px); line-height:1.1; margin:0 0 8px; }
+    p { font-size:clamp(23px,2.12vw,29px); line-height:1.36; margin:0; }
+    strong { color:var(--navy); }
+    .highlight { background:var(--soft); border-radius:12px; padding:15px 19px; border-left:6px solid #4785b5; margin-top:12px; }
+    .highlight p { font-size:clamp(22px,1.9vw,27px); }
+    .footer { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:24px; padding-top:13px; border-top:1px solid #dce6f0; font-size:17px; color:#61788c; }
+    .footer span { font-size:17px; }
+    @media (max-width:750px) { .toolbar{align-items:flex-start; flex-direction:column;} .slide{padding:24px 22px; min-height:calc(100vh - 130px);} h1{margin-bottom:20px;} .item{margin-bottom:18px;} p{font-size:21px;} h2{font-size:26px;} }
+    @media (max-height:720px) and (min-width:800px) { .slide{padding:22px 42px 18px;} h1{font-size:36px;margin-bottom:18px;padding-bottom:9px;} .item{margin-bottom:16px;} h2{font-size:26px;margin-bottom:5px;} p{font-size:23px;line-height:1.26;} .highlight{padding:12px 16px;} .highlight p{font-size:22px;} .footer{margin-top:12px;} }
+    @media print { @page{size:A4 portrait; margin:16mm;} body{background:white;} .toolbar{display:none;} main{margin:0; padding:0; max-width:none;} .slide,.slide.active{display:block; min-height:0; box-shadow:none; border:0; padding:0; border-radius:0; page-break-after:always; break-after:page;} .slide:last-child{page-break-after:auto;break-after:auto;} h1{font-size:25pt; margin-bottom:20px;} h2{font-size:17pt;} p{font-size:15pt;line-height:1.35;} .item{margin-bottom:20px;} .footer{margin-top:30px;} .highlight p{font-size:14pt;} }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <p>INFORMATIKA · VII. RAZRED · BILJEŠKE ZA BILJEŽNICU</p>
+    <div class="controls">
+      <button id="prev" type="button" onclick="change(-1)" aria-label="Prethodni dio">← Prethodno</button>
+      <button id="next" class="primary" type="button" onclick="change(1)" aria-label="Sljedeći dio">Sljedeće →</button>
+      <button type="button" onclick="window.print()">Ispiši</button>
+      <button type="button" onclick="toggleFullscreen()">Cijeli zaslon</button>
+    </div>
+  </div>
+  <main>
+    <section class="slide active" aria-label="Prvi dio bilješki">
+      <div class="eyebrow">DIO 1 OD 2</div>
+      <h1>Digitalni trag – što ostavljamo na internetu?</h1>
+      <div class="item">
+        <h2>1. Što je digitalni trag?</h2>
+        <p><strong>Digitalni trag</strong> su podatci koji ostaju nakon naših aktivnosti na internetu.</p>
+      </div>
+      <div class="item">
+        <h2>2. Namjerni digitalni trag</h2>
+        <p>Ostavljamo ga <strong>svjesno</strong>, npr. objavom fotografije ili pisanjem komentara.</p>
+      </div>
+      <div class="item">
+        <h2>3. Nenamjerni digitalni trag</h2>
+        <p>Nastaje i bez svjesnog objavljivanja, npr. kada stranica zabilježi <strong>IP adresu</strong> ili posjet.</p>
+      </div>
+      <div class="footer"><span>Prepiši naslov i tri kratke bilješke.</span><span>1 / 2</span></div>
+    </section>
+    <section class="slide" aria-label="Drugi dio bilješki">
+      <div class="eyebrow">DIO 2 OD 2</div>
+      <h1>Digitalni trag – primjeri i sigurnost</h1>
+      <div class="item">
+        <h2>4. Pozitivan i negativan digitalni trag</h2>
+        <p><strong>Pozitivan:</strong> pristojan komentar, objava školskog projekta.<br>
+        <strong>Negativan:</strong> vrijeđanje ili dijeljenje tuđih fotografija bez dopuštenja.</p>
+      </div>
+      <div class="item">
+        <h2>5. Kako se ponašati sigurno?</h2>
+        <p>Razmisli prije objave, čuvaj osobne podatke, traži dopuštenje i provjeri <strong>tko može vidjeti objavu</strong>.</p>
+      </div>
+      <div class="highlight">
+        <p><strong>Zapamti:</strong> Objavu netko može kopirati i dijeliti, čak i ako je kasnije obrišemo. Naš digitalni trag utječe na dojam koji drugi stvaraju o nama.</p>
+      </div>
+      <div class="footer"><span>Razumij primjere – ne uči samo napamet.</span><span>2 / 2</span></div>
+    </section>
+  </main>
+  <script>
+    let index = 0;
+    const slides = [...document.querySelectorAll('.slide')];
+    function change(step) {
+      index = Math.max(0, Math.min(slides.length - 1, index + step));
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      document.getElementById('prev').disabled = index === 0;
+      document.getElementById('next').disabled = index === slides.length - 1;
+    }
+    function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); }
+    document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'PageDown') change(1); if (e.key === 'ArrowLeft' || e.key === 'PageUp') change(-1); });
+    change(0);
+  </script>
+</body>
+</html>
